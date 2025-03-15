@@ -23,12 +23,12 @@ namespace Utilities
 				for (int j = 0; j < tiles.GetLength(1); j++)
 				{
 					var color = bitmap.GetPixel(i * tileSize, j * tileSize);
-					if (color == SKColors.Red)
+					if (color == 0xffff0000) // fire color
 					{
 						tiles[i, j] = new Tile(VegetationType.High, DensityType.Dense, BurnStateType.Burning);
 						continue;
 					}
-					if (color == SKColors.Brown)
+					if (color == 0xff1a120d) // burnt color
 					{
 						tiles[i, j] = new Tile(VegetationType.High, DensityType.Dense, BurnStateType.Burnt);
 						continue;
@@ -59,11 +59,11 @@ namespace Utilities
 					SKPaint paint;
 					if (tiles[x, y].BurnState == BurnStateType.Burning)
 					{
-						paint = new SKPaint { Color = SKColors.Red };
+						paint = new SKPaint { Color = 0xffff0000 };
 					}
 					else if (tiles[x, y].BurnState == BurnStateType.Burnt)
 					{
-						paint = new SKPaint { Color = SKColors.Brown };
+						paint = new SKPaint { Color = 0xff1a120d };
 					}
 					else
 					{
