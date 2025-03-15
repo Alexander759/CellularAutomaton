@@ -10,11 +10,11 @@ namespace CellularAutomaton.Web.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
-    public class ImagesAnimationController : ControllerBase
+    public class StatesOfSimulationController : ControllerBase
     {
         private readonly IWebHostEnvironment _env;
 
-        public ImagesAnimationController(IWebHostEnvironment env)
+        public StatesOfSimulationController(IWebHostEnvironment env)
         {
             _env = env;
         }
