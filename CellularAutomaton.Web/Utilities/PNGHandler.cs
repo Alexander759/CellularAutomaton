@@ -22,7 +22,18 @@ namespace Utilities
 			{
 				for (int j = 0; j < tiles.GetLength(1); j++)
 				{
-					var tuple = Tile.fromColor[bitmap.GetPixel(i * tileSize, j * tileSize)];
+					var color = bitmap.GetPixel(i * tileSize, j * tileSize);
+					if (color == SKColors.Red)
+					{
+						tiles[i, j] = new Tile(VegetationType.High, DensityType.Dense, BurnStateType.Burning);
+						continue;
+					}
+					if (color == SKColors.Brown)
+					{
+						tiles[i, j] = new Tile(VegetationType.High, DensityType.Dense, BurnStateType.Burnt);
+						continue;
+					}
+					var tuple = Tile.fromColor[color];
 					if (tuple.Item2 == DensityType.None) tiles[i, j] = new Tile(tuple.Item1, tuple.Item2, BurnStateType.None);
 					else tiles[i, j] = new Tile(tuple.Item1, tuple.Item2, BurnStateType.Fuel);
 				}
@@ -32,6 +43,7 @@ namespace Utilities
 
 		public static void Write(Tile[,] tiles, string filePath, int index)
 		{
+
 			using SKBitmap bitmap = new SKBitmap(width, height);
 			using SKCanvas canvas = new SKCanvas(bitmap);
 			IntPtr pixelsPtr = bitmap.GetPixels();
