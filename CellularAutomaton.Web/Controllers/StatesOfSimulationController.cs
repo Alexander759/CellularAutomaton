@@ -18,13 +18,11 @@ namespace CellularAutomaton.Web.Controllers
             _env = env;
         }
 
-        [HttpGet("sendState")]
         [HttpPost("sendState")]
         public async Task<IActionResult> SendState([FromBody] StateOfSimulationViewModel? model)
         {
             try
             {
-
                 string base64Data = model?.Image.Replace("data:image/png;base64,", "");
 
                 if (string.IsNullOrWhiteSpace(base64Data))
@@ -46,23 +44,12 @@ namespace CellularAutomaton.Web.Controllers
 
                 await System.IO.File.WriteAllBytesAsync(filePath, imageBytes);
 
+                int n = 50;
 
-                string pathToNewImages = PNGHandler.WriteFiles(NUMBEROFFRAMES, filePath, model.WindDirection, model.Width, model.Height, model.TileSize);
-
-                List<string> result =new List<string>();
-                
-                for (int i = 0; i < NUMBEROFFRAMES; i++)
-                {
-                    result.Add(Convert.ToBase64String(System.IO.File.ReadAllBytes(Path.Combine(pathToNewImages, $"{i}.png"))));
-                }
-
-                System.IO.File.Delete(filePath);
-                Directory.Delete(pathToNewImages, true);
-                return new JsonResult(new { message = "Success", images = result });
+                return new JsonResult(new { message = "Success", images = PNGHandler.WriteFiles(n, base64Data, model.WindDirection, model.Width, model.Height, model.TileSize) });
             }
             catch (Exception ex)
             {
-                // Return an error response
                 return BadRequest(new { message = "Error uploading image", details = ex.Message });
             }
         }
