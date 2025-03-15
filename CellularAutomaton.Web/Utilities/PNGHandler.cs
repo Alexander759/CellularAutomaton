@@ -12,7 +12,6 @@ namespace Utilities
 {
 	static class PNGHandler
 	{
-
         public static int width, height, tileSize = 10;
         public static IWebHostEnvironment? Environment { get; set; }
 
@@ -33,6 +32,7 @@ namespace Utilities
                 result.Add(PNGHandler.Write(model.Grid, i));
             }
 
+			beginning.Dispose();
 			return result;
         }
 
