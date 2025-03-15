@@ -30,7 +30,6 @@ namespace Utilities
 
 			Random r = new Random();
 
-
 			for (int i = 0; i < Rows; i++)
 			{
 				for (int j = 0; j < Cols; j++)
@@ -49,8 +48,8 @@ namespace Utilities
 							|| Grid[ni, nj].BurnState == BurnStateType.Burnt || Grid[ni, nj].BurnState == BurnStateType.None) continue;
 
 						double probability = CalculateSpreadProbability(i, j, angle);
+						if (dir % 2 == 1) probability /= Math.Sqrt(2); // In case of diagonal
 						double randomProb = r.NextDouble();
-
 
 						if (randomProb < probability)
 						{
@@ -62,7 +61,6 @@ namespace Utilities
 					newGrid[i, j].BurnState = BurnStateType.Burnt;
 				}
 			}
-
 			Grid = newGrid;
 		}
 
