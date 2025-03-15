@@ -1,1 +1,104 @@
-﻿
+﻿@{
+    ViewData["Title"] = "Модел за предсказване на пожари";
+    int canvasWidth = 800;
+    int canvasHeight = 400;
+}
+<div style="display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 2rem;">
+    <h2>Модел за предсказване на пожари</h2>
+    <div>
+        <canvas id="canvas" width=@canvasWidth height=@canvasHeight style="width:@canvasWidth; height:@canvasHeight; border: 1px solid black"></canvas>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 1rem;">
+        <div style="display: flex; flex-direction: row; gap: 2rem; align-items: center;">
+			<span class="text-primary">Тревна растителност:</span>
+            <button id="0" type="button" class="btn btn-primary" onclick="changeColor(0)">Трева с ниска гъстота</button>
+            <button id="1" type="button" class="btn btn-primary" onclick="changeColor(1)">Трева със средна гъстота</button>
+            <button id="2" type="button" class="btn btn-primary" onclick="changeColor(2)">Трева с висока гъстота</button>
+		</div>
+        <div style="display: flex; flex-direction: row; gap: 2rem; align-items: center;">
+            <span class="text-primary">Храстовидна растителност:</span>
+            <button id="3" type="button" class="btn btn-primary" onclick="changeColor(3)">Храсти с ниска гъстота</button>
+            <button id="4" type="button" class="btn btn-primary" onclick="changeColor(4)">Храсти със средна гъстота</button>
+            <button id="5" type="button" class="btn btn-primary" onclick="changeColor(5)">Храсти с висока гъстота</button>
+        </div>
+        <div style="display: flex; flex-direction: row; gap: 2rem; align-items: center;">
+            <span class="text-primary">Дървесна растителност:</span>
+            <button id="6" type="button" class="btn btn-primary" onclick="changeColor(6)">Дървета с ниска гъстота</button>
+            <button id="7" type="button" class="btn btn-primary" onclick="changeColor(7)">Дървета със средна гъстота</button>
+            <button id="8" type="button" class="btn btn-primary" onclick="changeColor(8)">Дървета с висока гъстота</button>
+        </div>
+        <div style="display: flex; flex-direction: row; gap: 2rem; align-items: center;">
+            <span class="text-primary">Други елементи:</span>
+            <button id="9" type="button" class="btn btn-primary" onclick="changeColor(9)">Вода</button>
+            <button id="10" type="button" class="btn btn-primary" onclick="changeColor(10)">Скали</button>
+            <button id="11" type="button" class="btn btn-primary" onclick="changeColor(11)">Пожар</button>
+        </div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 1rem; justify-content: center; align-items: center;">
+		<label id="rangeLabel">Размер на четката: 50</label>
+		<input id="slider" type="range" class="form-range" min="10" max="100" step="10" value="50" style="width: 30rem;">
+    </div>
+    
+</div>
+
+<script>
+    let brushSize = 50;
+    let canvas = document.getElementById("canvas");
+    let ctx = canvas.getContext("2d");
+    ctx.imageSmoothingEnabled = false;
+
+    const colorCodes = [
+      { tileType: "lowGrass",   color: "#fdff99" },
+      { tileType: "midGrass",   color: "#fbff4a" },
+      { tileType: "highGrass",  color: "#747527" },
+      { tileType: "lowBush",    color: "#d1a3ff" },
+      { tileType: "midBush",    color: "#9d3bff" },
+      { tileType: "highBush",   color: "#4c2275" },
+      { tileType: "lowTree",    color: "#90c96f" },
+      { tileType: "midTree",    color: "#568c37" },
+      { tileType: "highTree",   color: "#3f6927" },
+      { tileType: "water",      color: "#0091ff" },
+      { tileType: "rock",       color: "#4d4d4d" },
+      { tileType: "fire",       color: "#ff0000" },
+      { tileType: "burnt",      color: "#1a120d" }
+    ];
+
+    ctx.fillStyle = colorCodes[7].color;
+    document.getElementById(7).classList.add("btn-success");
+    ctx.fillRect(0,0,@canvasWidth, @canvasHeight);
+
+    canvas.addEventListener("click", function (e) {
+        ctx.fillRect(e.offsetX - brushSize/2, e.offsetY - brushSize/2, brushSize, brushSize);
+    })
+
+    let isDrawing = false;
+
+    canvas.addEventListener("mousedown", function () {
+        isDrawing = true;
+    })
+    
+    canvas.addEventListener("mousemove", function(e) {
+        if(isDrawing){
+            ctx.fillRect(e.offsetX - brushSize/2, e.offsetY - brushSize/2, brushSize, brushSize);
+        }
+    })
+
+    canvas.addEventListener("mouseup", function(e) {
+        isDrawing = false;
+    })
+
+    let lastColor = 7;
+    function changeColor(index){
+        ctx.fillStyle = colorCodes[index].color;
+        document.getElementById(index).classList.add("btn-success");
+        document.getElementById(lastColor).classList.remove("btn-success");
+        lastColor = index;
+    }
+
+
+    document.getElementById("slider").oninput = function (e) {
+        brushSize = e.target.value;
+        document.getElementById("rangeLabel").textContent = "Размер на черката: " + brushSize;
+    };
+
+</script>
