@@ -2,9 +2,9 @@
 {
     public class StateOfSimulationViewModel
     {
-        string Base64Png {  get; set; }
-        double WindDirection { get; set; }
-        int Width { get; set; }
-        int Height { get; set; }
+        public string? Image {  get; set; }
+        public double WindDirection { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
     }
 }

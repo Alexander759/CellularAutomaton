@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using CellularAutomaton.Web.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CellularAutomaton.Web.Controllers
@@ -19,16 +20,23 @@ namespace CellularAutomaton.Web.Controllers
             _env = env;
         }
 
-        [HttpPost("upload")]
-        public async Task<IActionResult> UploadImage([FromBody] ImageRequest? imageRequest)
+        [HttpPost("sendState")]
+        public async Task<IActionResult> SendState([FromBody] StateOfSimulationViewModel? model)
         {
             try
             {
-                var base64Data = imageRequest.Image.Replace("data:image/png;base64,", "");
+                var base64Data = model?.Image.Replace("data:image/png;base64,", "");
+
+                if (string.IsNullOrWhiteSpace(base64Data))
+                {
+                    throw new ArgumentException("No image File");
+                }
 
                 byte[] imageBytes = Convert.FromBase64String(base64Data);
 
-                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "image.png");
+                string imageName = $"{Guid.NewGuid().ToString()}.png";
+
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", $"{imageName}");
 
                 var directory = Path.GetDirectoryName(filePath);
                 if (!Directory.Exists(directory))
