@@ -4,13 +4,34 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using CellularAutomaton.Web.Models;
 using SkiaSharp;
 
 namespace Utilities
 {
 	static class PNGHandler
 	{
-		public static int width, height, tileSize = 10;
+
+        public static int width, height, tileSize = 10;
+        public static IWebHostEnvironment? Environment { get; set; }
+
+		public static string WriteFiles(int numberOfFilesToWrite, string filepath,
+			double windDirection, int width, int height, int tileSize)
+		{
+			PNGHandler.tileSize = tileSize;
+            string path = Path.Combine(Environment.WebRootPath, Guid.NewGuid().ToString());
+            Tile[,] tiles = PNGHandler.Read(filepath);
+            Model model = new Model(width, height, tiles, windDirection);
+
+			for (int i = 0; i < numberOfFilesToWrite; i++)
+            {
+                model.SimulateFireSpread();
+                PNGHandler.Write(model.Grid, path, i);
+            }
+
+			return path;
+        }
+
 		public static Tile[,] Read(string filePath)
 		{
 			using SKBitmap bitmap = SKBitmap.Decode(filePath);

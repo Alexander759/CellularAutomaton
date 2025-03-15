@@ -1,3 +1,5 @@
+using Utilities;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -18,6 +20,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+PNGHandler.Environment = app.Services.GetService<IWebHostEnvironment>();
 
 app.MapControllerRoute(
     name: "default",

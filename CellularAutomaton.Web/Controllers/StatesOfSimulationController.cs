@@ -1,6 +1,8 @@
 ﻿using CellularAutomaton.Web.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json.Serialization;
+using Utilities;
 
 namespace CellularAutomaton.Web.Controllers
 {
@@ -25,7 +27,8 @@ namespace CellularAutomaton.Web.Controllers
         {
             try
             {
-                var base64Data = model?.Image.Replace("data:image/png;base64,", "");
+
+                string base64Data = model?.Image.Replace("data:image/png;base64,", "");
 
                 if (string.IsNullOrWhiteSpace(base64Data))
                 {
@@ -46,7 +49,25 @@ namespace CellularAutomaton.Web.Controllers
 
                 await System.IO.File.WriteAllBytesAsync(filePath, imageBytes);
 
-                return Ok(new { message = "Image uploaded successfully" });
+                int n = 50;
+
+                string pathToNewImages = PNGHandler.WriteFiles(n, filePath, model.WindDirection, model.Width, model.Height, model.TileSize);
+
+                List<string> result =new List<string>();
+                
+                for (int i = 0; i < pathToNewImages.Length; i++)
+                {
+                    result.Add(Convert.ToBase64String(System.IO.File.ReadAllBytes(Path.Combine(pathToNewImages, $"{i}.png"))));
+                }
+
+                for (int i = 0; i < pathToNewImages.Length; i++)
+                {
+                    result.Add(Convert.ToBase64String(System.IO.File.ReadAllBytes(Path.Combine(pathToNewImages, $"{i}.png"))));
+                }
+
+                System.IO.File.Delete(filePath);
+                Directory.Delete(pathToNewImages, true);
+                return new JsonResult(new { message = "Success", images = result });
             }
             catch (Exception ex)
             {
