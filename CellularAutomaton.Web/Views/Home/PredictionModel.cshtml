@@ -1,7 +1,5 @@
 ﻿@{
     ViewData["Title"] = "Модел за предсказване на пожари";
-    int canvasWidth = 800;
-    int canvasHeight = 400;
 }
 <style>
     .btnContainer {
@@ -23,7 +21,7 @@
 <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 2rem; padding-top: 3rem;">
     <h1 class="text-primary">Модел за предсказване на пожари</h1>
     <div>
-        <canvas id="canvas" width=@canvasWidth height=@canvasHeight style="width:@canvasWidth; height:@canvasHeight; border: 1px solid black"></canvas>
+        <canvas id="canvas" width="800" height="400" style="border: 1px solid black"></canvas>
     </div>
     <div style="display: flex; align-content: center; gap: 3rem;">
         <button class="btn btn-secondary" id="btnPrev">Previous</button>
@@ -67,16 +65,25 @@
             </svg>
             <input id="slider2" type="range" class="form-range" min="0" max="6.28" step="0.01" value="0" style="width: 30rem;">
         </div>
+        <form action="/post" method="post" style="display: flex; flex-direction: row; justify-content: space-around;" onsubmit="changeCanvasDimentions(event)">
+            <label class="text-secondary">Въведете ширина: </label>
+            <input class="form-control" name ="canWidth" style="width: 8rem;" type="text" value="800" />
+            <label class="text-secondary">Въведете височина: </label>
+            <input class="form-control" name="canHeight" style="width: 8rem;" type="text" value="400" />
+            <button class="btn btn-success">Запази</button>
+        </form>
     </div>
     
     
 </div>
 
 <script>
+    let canvasWidth = 800;
+    let canvasHeight = 400;
     let brushSize = 50;
     let windDirection = 0.0;
-    let canvas = document.getElementById("canvas");
-    let ctx = canvas.getContext("2d");
+    var canvas = document.getElementById("canvas");
+    var ctx = canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false;
 
     const colorCodes = [
@@ -97,7 +104,7 @@
 
     ctx.fillStyle = colorCodes[7].color;
     document.getElementById(7).classList.add("btn-success");
-    ctx.fillRect(0,0,@canvasWidth, @canvasHeight);
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);  
 
     canvas.addEventListener("click", function (e) {
         ctx.fillRect(e.offsetX - brushSize/2, e.offsetY - brushSize/2, brushSize, brushSize);
@@ -131,6 +138,19 @@
         lastColor = index;
     }
 
+    function changeCanvasDimentions(event){
+        event.preventDefault();
+        canvasWidth = event.target.canWidth.value;
+        canvasHeight = event.target.canHeight.value;
+
+        ctx.canvas.width = canvasWidth;
+        ctx.canvas.height = canvasHeight;
+
+        ctx.fillStyle = colorCodes[7].color;
+        document.getElementById(7).classList.add("btn-success");
+        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+    }
+
 
     document.getElementById("slider1").oninput = function (e) {
         brushSize = e.target.value;
@@ -140,7 +160,7 @@
     document.getElementById("slider2").oninput = function (e) {
         windDirection = e.target.value;
         document.getElementById("arrow").style = "transform-origin: 50% 50%; transform: rotate(" + windDirection*(-57.29) + "deg)";
-        console.log(windDirection);
     };
+
 
 </script>
