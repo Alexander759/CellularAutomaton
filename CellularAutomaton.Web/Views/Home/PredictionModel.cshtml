@@ -1,1 +1,53 @@
-﻿
+﻿@{
+    ViewData["Title"] = "Модел за предсказване на пожари";
+    int canvasWidth = 800;
+    int canvasHeight = 400;
+    int brushSize = 50;
+}
+<div style="display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 2rem;">
+    <h2>Модел за предсказване на пожари</h2>
+    <div>
+        <canvas id="canvas" width=@canvasWidth height=@canvasHeight style="width:@canvasWidth; height:@canvasHeight; border: 1px solid black"></canvas>
+    </div>
+    <div>
+		<div style="display: flex; flex-direction: row; gap: 2rem;">
+			<p class="text-primary">Изберете гъстота на растителността:</p>
+			<button type="button" class="btn btn-primary">Висока</button>
+			<button type="button" class="btn btn-primary">Средна</button>
+			<button type="button" class="btn btn-primary">Ниска</button>
+		</div>
+        <div style="display: flex; flex-direction: row; gap: 2rem;">
+			<p class="text-primary">Изберете вида на растителността:</p>
+			<button type="button" class="btn btn-primary">Дървесна</button>
+			<button type="button" class="btn btn-primary">Храстовидна</button>
+			<button type="button" class="btn btn-primary">Тревна</button>
+		</div>
+    </div>
+    <div>
+        <p class="text-primary">Други</p>
+		<button type="button" class="btn btn-primary">Rock</button>
+		<button type="button" class="btn btn-primary">Water</button>
+    </div>
+    <label>Размер на четката</label>
+    <input id="slider" type="range" class="form-range" min="10" max="100" step="10" value="50">
+</div>
+
+<script>
+    let brushSize = 50;
+    let canvas = document.getElementById("canvas");
+    let ctx = canvas.getContext("2d");
+    ctx.imageSmoothingEnabled = false;
+
+    document.getElementById("slider").oninput = function (e) {
+        brushSize = e.target.value;
+    };
+
+    ctx.fillStyle = "green";
+    ctx.fillRect(0,0,@canvasWidth, @canvasHeight);
+
+    canvas.addEventListener("click", function (e) {
+        ctx.fillStyle = "red";
+        ctx.fillRect(e.offsetX - brushSize/2, e.offsetY - brushSize/2, brushSize, brushSize);
+    })
+
+</script>
