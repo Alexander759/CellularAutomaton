@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using CellularAutomaton.Web.Models;
+using CellularAutomaton.Web.Utilities;
 using SkiaSharp;
 
 namespace Utilities
@@ -15,31 +16,31 @@ namespace Utilities
         public static int width, height, tileSize = 10;
         public static IWebHostEnvironment? Environment { get; set; }
 
-		public static string WriteFiles(int numberOfFilesToWrite, string filepathToPhoto,
+		public static List<string> WriteFiles(int numberOfFilesToWrite, string imageInBase64,
 			double windDirection, int width, int height, int tileSize)
 		{
 			PNGHandler.tileSize = tileSize;
-			string newFolder = Guid.NewGuid().ToString();
-			Directory.CreateDirectory(Path.Combine(Environment.WebRootPath, newFolder));
-            string path = Path.Combine(Environment.WebRootPath, newFolder);
-            Tile[,] tiles = PNGHandler.Read(filepathToPhoto);
+
+			SKBitmap beginning = BitMapBase64Converter.ConvertBase64ToSKBitmap(imageInBase64);
+            Tile[,] tiles = PNGHandler.Read(beginning);
             Model model = new Model(width, height, tiles, windDirection);
+
+			List<string> result = new List<string>();
 
 			for (int i = 0; i < numberOfFilesToWrite; i++)
             {
                 model.SimulateFireSpread();
-                PNGHandler.Write(model.Grid, Path.Combine(path), i);
+                result.Add(PNGHandler.Write(model.Grid, i));
             }
 
-			return path;
+			return result;
         }
 
-		public static Tile[,] Read(string filePath)
+		public static Tile[,] Read(SKBitmap bitmap)
 		{
-			using SKBitmap bitmap = SKBitmap.Decode(filePath);
 			width = bitmap.Width;
 			height = bitmap.Height;
-			Console.WriteLine($"Image loaded: {width}x{height}");
+			//Console.WriteLine($"Image loaded: {width}x{height}");
 			Tile[,] tiles = new Tile[width / tileSize, height / tileSize];
 
 			for (int i = 0; i < tiles.GetLength(0); i++)
@@ -65,7 +66,7 @@ namespace Utilities
 			return tiles;
 		}
 
-		public static void Write(Tile[,] tiles, string filePath, int index)
+		public static string Write(Tile[,] tiles, int index)
 		{
 
 			using SKBitmap bitmap = new SKBitmap(width, height);
@@ -103,15 +104,7 @@ namespace Utilities
 				}
 			}
 
-			// Encode as PNG
-			using var image = SKImage.FromBitmap(bitmap);
-			using var data = image.Encode(SKEncodedImageFormat.Png, 100);
-
-			string s = filePath + $"\\{index}.png";
-            // Save the file
-            File.WriteAllBytes(s, data.ToArray());
-
-			Console.WriteLine($"PNG image saved as {index}.png");
+			return BitMapBase64Converter.ConvertSKBitmapToBase64(bitmap);
 		}
 	}
 }
