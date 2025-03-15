@@ -1,11 +1,11 @@
-using SkiaSharp;
+﻿using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConsoleApp1
+namespace Utilities
 {
 	public enum VegetationType : sbyte
 	{
@@ -19,7 +19,7 @@ namespace ConsoleApp1
 	public enum DensityType : sbyte
 	{
 		None = -10,
-		Sparce = -4,
+		Sparse = -4,
 		Medium = 0,
 		Dense = 3
 	}
@@ -36,8 +36,8 @@ namespace ConsoleApp1
 	{
 		public Tile(VegetationType vegetation, DensityType density, BurnStateType burnState)
 		{
-			Vegetation = (double)vegetation / 10.0;
-			Density = (double)density / 10.0;
+			Vegetation = (double)vegetation / 10;
+			Density = (double)density / 10;
 			BurnState = burnState;
 		}
 
@@ -50,9 +50,9 @@ namespace ConsoleApp1
 			{ (VegetationType.Water, DensityType.None), SKColors.CornflowerBlue },
 			{ (VegetationType.Rock, DensityType.None), SKColors.Gray },
 
-			{ (VegetationType.Low, DensityType.Sparce), SKColors.Yellow },
-			{ (VegetationType.Medium, DensityType.Sparce), SKColors.YellowGreen },
-			{ (VegetationType.High, DensityType.Sparce), SKColors.GreenYellow },
+			{ (VegetationType.Low, DensityType.Sparse), SKColors.Yellow },
+			{ (VegetationType.Medium, DensityType.Sparse), SKColors.YellowGreen },
+			{ (VegetationType.High, DensityType.Sparse), SKColors.GreenYellow },
 
 			{ (VegetationType.Low, DensityType.Medium), SKColors.LightGreen },
 			{ (VegetationType.Medium, DensityType.Medium), SKColors.Lime },
@@ -66,11 +66,11 @@ namespace ConsoleApp1
 		public static Dictionary<SKColor, (VegetationType, DensityType)> fromColor = new()
 		{
 			{ SKColors.CornflowerBlue, (VegetationType.Water, DensityType.None) },
-			{ SKColors.Gray , (VegetationType.Rock, DensityType.None) },
+			{ SKColors.Gray, (VegetationType.Rock, DensityType.None) },
 
-			{ SKColors.Yellow , (VegetationType.Low, DensityType.Sparce) },
-			{ SKColors.YellowGreen , (VegetationType.Medium, DensityType.Sparce) },
-			{ SKColors.GreenYellow , (VegetationType.High, DensityType.Sparce) },
+			{ SKColors.Yellow , (VegetationType.Low, DensityType.Sparse) },
+			{ SKColors.YellowGreen , (VegetationType.Medium, DensityType.Sparse) },
+			{ SKColors.GreenYellow , (VegetationType.High, DensityType.Sparse) },
 
 			{ SKColors.LightGreen , (VegetationType.Low, DensityType.Medium) },
 			{ SKColors.Lime , (VegetationType.Medium, DensityType.Medium) },
