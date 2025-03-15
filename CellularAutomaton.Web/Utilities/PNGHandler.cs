@@ -29,7 +29,7 @@ namespace Utilities
 			}
 			return tiles;
 		}
-		
+
 		public static void Write(Tile[,] tiles, string filePath, int index)
 		{
 			using SKBitmap bitmap = new SKBitmap(width, height);
@@ -53,9 +53,12 @@ namespace Utilities
 					{
 						paint = new SKPaint { Color = SKColors.Brown };
 					}
-					else {
+					else
+					{
 
-						paint = new SKPaint {Color = Tile.toColors[
+						paint = new SKPaint
+						{
+							Color = Tile.toColors[
 							((VegetationType)(tiles[x, y].Vegetation * 10),
 							(DensityType)(tiles[x, y].Density * 10))]
 						};
