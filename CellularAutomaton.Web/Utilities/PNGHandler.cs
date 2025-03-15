@@ -15,18 +15,20 @@ namespace Utilities
         public static int width, height, tileSize = 10;
         public static IWebHostEnvironment? Environment { get; set; }
 
-		public static string WriteFiles(int numberOfFilesToWrite, string filepath,
+		public static string WriteFiles(int numberOfFilesToWrite, string filepathToPhoto,
 			double windDirection, int width, int height, int tileSize)
 		{
 			PNGHandler.tileSize = tileSize;
-            string path = Path.Combine(Environment.WebRootPath, Guid.NewGuid().ToString());
-            Tile[,] tiles = PNGHandler.Read(filepath);
+			string newFolder = Guid.NewGuid().ToString();
+			Directory.CreateDirectory(Path.Combine(Environment.WebRootPath, newFolder));
+            string path = Path.Combine(Environment.WebRootPath, newFolder);
+            Tile[,] tiles = PNGHandler.Read(filepathToPhoto);
             Model model = new Model(width, height, tiles, windDirection);
 
 			for (int i = 0; i < numberOfFilesToWrite; i++)
             {
                 model.SimulateFireSpread();
-                PNGHandler.Write(model.Grid, path, i);
+                PNGHandler.Write(model.Grid, Path.Combine(path), i);
             }
 
 			return path;
@@ -105,8 +107,9 @@ namespace Utilities
 			using var image = SKImage.FromBitmap(bitmap);
 			using var data = image.Encode(SKEncodedImageFormat.Png, 100);
 
-			// Save the file
-			File.WriteAllBytes(filePath + $"\\output\\{index}.png", data.ToArray());
+			string s = filePath + $"\\{index}.png";
+            // Save the file
+            File.WriteAllBytes(s, data.ToArray());
 
 			Console.WriteLine($"PNG image saved as {index}.png");
 		}

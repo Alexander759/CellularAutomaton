@@ -22,6 +22,7 @@ namespace CellularAutomaton.Web.Controllers
             _env = env;
         }
 
+        [HttpGet("sendState")]
         [HttpPost("sendState")]
         public async Task<IActionResult> SendState([FromBody] StateOfSimulationViewModel? model)
         {
@@ -55,12 +56,7 @@ namespace CellularAutomaton.Web.Controllers
 
                 List<string> result =new List<string>();
                 
-                for (int i = 0; i < pathToNewImages.Length; i++)
-                {
-                    result.Add(Convert.ToBase64String(System.IO.File.ReadAllBytes(Path.Combine(pathToNewImages, $"{i}.png"))));
-                }
-
-                for (int i = 0; i < pathToNewImages.Length; i++)
+                for (int i = 0; i < n; i++)
                 {
                     result.Add(Convert.ToBase64String(System.IO.File.ReadAllBytes(Path.Combine(pathToNewImages, $"{i}.png"))));
                 }
@@ -76,6 +72,4 @@ namespace CellularAutomaton.Web.Controllers
             }
         }
     }
-
-    
 }
