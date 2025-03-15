@@ -6,15 +6,11 @@ using Utilities;
 
 namespace CellularAutomaton.Web.Controllers
 {
-    public class ImageRequest
-    {
-        public string Image { get; set; }
-    }
-
     [Route("api/[controller]")]
     [ApiController]
     public class StatesOfSimulationController : ControllerBase
     {
+        const int NUMBEROFFRAMES = 20;
         private readonly IWebHostEnvironment _env;
 
         public StatesOfSimulationController(IWebHostEnvironment env)
@@ -50,13 +46,12 @@ namespace CellularAutomaton.Web.Controllers
 
                 await System.IO.File.WriteAllBytesAsync(filePath, imageBytes);
 
-                int n = 50;
 
-                string pathToNewImages = PNGHandler.WriteFiles(n, filePath, model.WindDirection, model.Width, model.Height, model.TileSize);
+                string pathToNewImages = PNGHandler.WriteFiles(NUMBEROFFRAMES, filePath, model.WindDirection, model.Width, model.Height, model.TileSize);
 
                 List<string> result =new List<string>();
                 
-                for (int i = 0; i < n; i++)
+                for (int i = 0; i < NUMBEROFFRAMES; i++)
                 {
                     result.Add(Convert.ToBase64String(System.IO.File.ReadAllBytes(Path.Combine(pathToNewImages, $"{i}.png"))));
                 }
