@@ -6,15 +6,11 @@ using Utilities;
 
 namespace CellularAutomaton.Web.Controllers
 {
-    public class ImageRequest
-    {
-        public string Image { get; set; }
-    }
-
     [Route("api/[controller]")]
     [ApiController]
     public class StatesOfSimulationController : ControllerBase
     {
+        const int NUMBEROFFRAMES = 20;
         private readonly IWebHostEnvironment _env;
 
         public StatesOfSimulationController(IWebHostEnvironment env)
@@ -33,6 +29,20 @@ namespace CellularAutomaton.Web.Controllers
                 {
                     throw new ArgumentException("No image File");
                 }
+
+                byte[] imageBytes = Convert.FromBase64String(base64Data);
+
+                string imageName = $"{Guid.NewGuid().ToString()}.png";
+
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", $"{imageName}");
+
+                var directory = Path.GetDirectoryName(filePath);
+                if (!Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+
+                await System.IO.File.WriteAllBytesAsync(filePath, imageBytes);
 
                 int n = 50;
 
