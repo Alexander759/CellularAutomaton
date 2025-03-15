@@ -47,38 +47,38 @@ namespace Utilities
 
 		public static Dictionary<(VegetationType, DensityType), SKColor> toColors = new()
 		{
-			{ (VegetationType.Water, DensityType.None), SKColors.CornflowerBlue },
-			{ (VegetationType.Rock, DensityType.None), SKColors.Gray },
+			{ (VegetationType.Water, DensityType.None), 0xff0091ff },
+			{ (VegetationType.Rock, DensityType.None), 0xff4d4d4d },
 
-			{ (VegetationType.Low, DensityType.Sparse), SKColors.Yellow },
-			{ (VegetationType.Medium, DensityType.Sparse), SKColors.YellowGreen },
-			{ (VegetationType.High, DensityType.Sparse), SKColors.GreenYellow },
+			{ (VegetationType.Low, DensityType.Sparse), 0xfffdff99 },
+			{ (VegetationType.Medium, DensityType.Sparse), 0xfffbff4a },
+			{ (VegetationType.High, DensityType.Sparse), 0xff747527 },
 
-			{ (VegetationType.Low, DensityType.Medium), SKColors.LightGreen },
-			{ (VegetationType.Medium, DensityType.Medium), SKColors.Lime },
-			{ (VegetationType.High, DensityType.Medium), SKColors.Green },
+			{ (VegetationType.Low, DensityType.Medium), 0xffd1a3ff },
+			{ (VegetationType.Medium, DensityType.Medium), 0xff9d3bff },
+			{ (VegetationType.High, DensityType.Medium), 0xff4c2275 },
 
-			{ (VegetationType.Low, DensityType.Dense), SKColors.Teal },
-			{ (VegetationType.Medium, DensityType.Dense), SKColors.ForestGreen },
-			{ (VegetationType.High, DensityType.Dense), SKColors.DarkGreen },
+			{ (VegetationType.Low, DensityType.Dense), 0xff90c96f },
+			{ (VegetationType.Medium, DensityType.Dense), 0xff568c37 },
+			{ (VegetationType.High, DensityType.Dense), 0xff3f6927 },
 		};
 
 		public static Dictionary<SKColor, (VegetationType, DensityType)> fromColor = new()
 		{
-			{ SKColors.CornflowerBlue, (VegetationType.Water, DensityType.None) },
-			{ SKColors.Gray, (VegetationType.Rock, DensityType.None) },
+			{ 0xff0091ff, (VegetationType.Water, DensityType.None) },
+			{ 0xff4d4d4d, (VegetationType.Rock, DensityType.None) },
 
-			{ SKColors.Yellow , (VegetationType.Low, DensityType.Sparse) },
-			{ SKColors.YellowGreen , (VegetationType.Medium, DensityType.Sparse) },
-			{ SKColors.GreenYellow , (VegetationType.High, DensityType.Sparse) },
+			{ 0xfffdff99, (VegetationType.Low, DensityType.Sparse) },
+			{ 0xfffbff4a, (VegetationType.Medium, DensityType.Sparse) },
+			{ 0xff747527, (VegetationType.High, DensityType.Sparse) },
 
-			{ SKColors.LightGreen , (VegetationType.Low, DensityType.Medium) },
-			{ SKColors.Lime , (VegetationType.Medium, DensityType.Medium) },
-			{ SKColors.Green , (VegetationType.High, DensityType.Medium) },
+			{ 0xffd1a3ff, (VegetationType.Low, DensityType.Medium) },
+			{ 0xff9d3bff, (VegetationType.Medium, DensityType.Medium) },
+			{ 0xff4c2275, (VegetationType.High, DensityType.Medium) },
 
-			{ SKColors.Teal , (VegetationType.Low, DensityType.Dense) },
-			{ SKColors.ForestGreen , (VegetationType.Medium, DensityType.Dense) },
-			{ SKColors.DarkGreen , (VegetationType.High, DensityType.Dense) },
+			{ 0xff90c96f, (VegetationType.Low, DensityType.Dense) },
+			{ 0xff568c37, (VegetationType.Medium, DensityType.Dense) },
+			{ 0xff3f6927, (VegetationType.High, DensityType.Dense) },
 		};
 
 	}

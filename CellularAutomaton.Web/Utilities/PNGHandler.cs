@@ -1,15 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using CellularAutomaton.Web.Models;
 using SkiaSharp;
 
 namespace Utilities
 {
 	static class PNGHandler
 	{
-		public static int width, height, tileSize = 10;
+
+        public static int width, height, tileSize = 10;
+        public static IWebHostEnvironment? Environment { get; set; }
+
+		public static string WriteFiles(int numberOfFilesToWrite, string filepath,
+			double windDirection, int width, int height, int tileSize)
+		{
+			PNGHandler.tileSize = tileSize;
+            string path = Path.Combine(Environment.WebRootPath, Guid.NewGuid().ToString());
+            Tile[,] tiles = PNGHandler.Read(filepath);
+            Model model = new Model(width, height, tiles, windDirection);
+
+			for (int i = 0; i < numberOfFilesToWrite; i++)
+            {
+                model.SimulateFireSpread();
+                PNGHandler.Write(model.Grid, path, i);
+            }
+
+			return path;
+        }
+
 		public static Tile[,] Read(string filePath)
 		{
 			using SKBitmap bitmap = SKBitmap.Decode(filePath);
@@ -22,16 +44,28 @@ namespace Utilities
 			{
 				for (int j = 0; j < tiles.GetLength(1); j++)
 				{
-					var tuple = Tile.fromColor[bitmap.GetPixel(i * tileSize, j * tileSize)];
+					var color = bitmap.GetPixel(i * tileSize, j * tileSize);
+					if (color == 0xffff0000) // fire color
+					{
+						tiles[i, j] = new Tile(VegetationType.High, DensityType.Dense, BurnStateType.Burning);
+						continue;
+					}
+					if (color == 0xff1a120d) // burnt color
+					{
+						tiles[i, j] = new Tile(VegetationType.High, DensityType.Dense, BurnStateType.Burnt);
+						continue;
+					}
+					var tuple = Tile.fromColor[color];
 					if (tuple.Item2 == DensityType.None) tiles[i, j] = new Tile(tuple.Item1, tuple.Item2, BurnStateType.None);
 					else tiles[i, j] = new Tile(tuple.Item1, tuple.Item2, BurnStateType.Fuel);
 				}
 			}
 			return tiles;
 		}
-		
+
 		public static void Write(Tile[,] tiles, string filePath, int index)
 		{
+
 			using SKBitmap bitmap = new SKBitmap(width, height);
 			using SKCanvas canvas = new SKCanvas(bitmap);
 			IntPtr pixelsPtr = bitmap.GetPixels();
@@ -47,15 +81,18 @@ namespace Utilities
 					SKPaint paint;
 					if (tiles[x, y].BurnState == BurnStateType.Burning)
 					{
-						paint = new SKPaint { Color = SKColors.Red };
+						paint = new SKPaint { Color = 0xffff0000 };
 					}
 					else if (tiles[x, y].BurnState == BurnStateType.Burnt)
 					{
-						paint = new SKPaint { Color = SKColors.Brown };
+						paint = new SKPaint { Color = 0xff1a120d };
 					}
-					else {
+					else
+					{
 
-						paint = new SKPaint {Color = Tile.toColors[
+						paint = new SKPaint
+						{
+							Color = Tile.toColors[
 							((VegetationType)(tiles[x, y].Vegetation * 10),
 							(DensityType)(tiles[x, y].Density * 10))]
 						};
