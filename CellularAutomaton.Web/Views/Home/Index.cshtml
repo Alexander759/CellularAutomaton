@@ -2,6 +2,137 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Клетъчни автомати</h1>
+<link rel="stylesheet" href="~/css/MainPage.css" />
+
+
+<div class="text-center w-100" style="height: 93vh; background: black;">
+    <h1 class="text-center position-absolute text-white" style="font-size: 3em; z-index: 100; top: 40%; left: 50%; transform: translate(-50%, -50%);">
+        Приложения на клетъчните автомати
+    </h1>
+    
+    <div class="w-100 h-100 p-0 m-0" style=" filter: brightness(80%); " id="background-canvas-simulation-holder">
+       
+    </div>
 </div>
+
+<section class="container d-flex w-100 h-100 mt-3 flex-sm-row flex-column">
+    <div class="col-md-6 col-sm-12 d-flex flex-column h-100 align-content-center justify-content-center">
+        <h2 class="text-center">
+            Какво представляват клетъчните автомати?
+        </h2>
+        <hr />
+        <p>
+            Клетъчните автомати са математически модели, състоящи се от решетка от 
+            клетки, всяка от които може да приема крайно множество състояния. Еволюцията 
+            на клетките се определя от предварително зададени правила, които обикновено 
+            зависят от състоянието на съседните клетки. Тези системи се развиват в дискретни 
+            времеви стъпки и могат да демонстрират сложни поведения, въпреки простите си правила. 
+        </p>
+    </div class="w-100 h-100">
+<div>    
+</div>
+
+
+</section>
+<section>
+    <div class="col-md-6  col-sm-12" id="canvas-simulation-h-holder"></div>
+
+</section>
+<script>
+    function createCanvas(containerId) {
+        const container = document.getElementById(containerId);
+        const canvas = document.createElement('canvas');
+        container.appendChild(canvas);
+        const ctx = canvas.getContext('2d');
+        canvas.width = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
+        return { canvas, ctx };
+    }
+
+    const config = {
+        cols: 300,
+        rows: 300,
+        numAnts: 2000,
+        evaporationRate: 0.99,
+        antColor: 'rgb(255, 0, 0)',
+        backgroundColor: 'rgb(0, 100, 0)'
+    };
+
+    const { canvas, ctx } = createCanvas('background-canvas-simulation-holder');
+   
+    let cellSizeX = canvas.width / config.cols;
+    let cellSizeY = canvas.width / config.cols;
+
+    if ((window.screen.width / window.screen.height) < 0.5) {
+        cellSizeX = canvas.height / config.rows
+        cellSizeY = canvas.height / config.rows
+    }
+
+    let grid = Array.from({ length: config.rows }, () => Array(config.cols).fill(0));
+    let ants = [];
+
+    const directions = [
+        { x: 0, y: -1 },
+        { x: 1, y: 0 },
+        { x: 0, y: 1 },
+        { x: -1, y: 0 }
+    ];
+
+    class Ant {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+            this.direction = Math.floor(Math.random() * directions.length);
+        }
+
+        move() {
+            this.direction = (this.direction + (Math.random() > 0.5 ? 1 : -1) + directions.length) % directions.length;
+            let newX = this.x + directions[this.direction].x;
+            let newY = this.y + directions[this.direction].y;
+
+            if (newX >= 0 && newX < config.cols && newY >= 0 && newY < config.rows) {
+                this.x = newX;
+                this.y = newY;
+                grid[this.y][this.x] = 1;
+            }
+        }
+    }
+
+    function initializeAnts() {
+        ants = Array.from({ length: config.numAnts }, () =>
+            new Ant(
+                Math.floor(Math.random() * config.cols),
+                Math.floor(Math.random() * config.rows)
+            )
+        );
+    }
+
+    function drawGrid() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        grid.forEach((row, y) => {
+            row.forEach((cell, x) => {
+                let intensity = Math.min(255, Math.max(0, cell * 255));
+                ctx.fillStyle = intensity > 100 ? config.antColor : config.backgroundColor;
+                ctx.fillRect(x * cellSizeX, y * cellSizeY, cellSizeX, cellSizeY);
+            });
+        });
+    }
+
+    function updateGrid() {
+        ants.forEach(ant => ant.move());
+        grid = grid.map(row => row.map(cell => cell * config.evaporationRate));
+    }
+
+    function loop() {
+        drawGrid();
+        updateGrid();
+        requestAnimationFrame(loop);
+    }
+
+    initializeAnts();
+    loop();
+
+</script>
+<script>
+    document.getElementById("main-container").classList.remove("container");
+</script>
