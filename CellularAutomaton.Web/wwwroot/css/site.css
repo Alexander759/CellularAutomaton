@@ -20,3 +20,9 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+@media screen and (min-width: 600px) {
+    .appear-left{
+        order: 1;
+    }
+}
