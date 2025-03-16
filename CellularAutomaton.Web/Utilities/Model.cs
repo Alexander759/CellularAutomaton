@@ -62,8 +62,6 @@ namespace Utilities
         // Simulate fire spread for a fixed ammount of time steps
         public List<string> SimulateFireSpread(int NumberOfFiles, int tileSize, SKBitmap currentBitmap)
         {
-            finishedSimulation = false;
-
             using SKCanvas canvas = new SKCanvas(currentBitmap);
             SKPaint paint;
 

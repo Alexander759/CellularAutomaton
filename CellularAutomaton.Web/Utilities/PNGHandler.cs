@@ -16,7 +16,7 @@ namespace Utilities
         public static int width, height, tileSize;
         //public static IWebHostEnvironment? Environment { get; set; }
 
-        public static (List<string>, bool) WriteFiles(int numberOfFilesToWrite, string imageInBase64,
+        public static List<string> WriteFiles(int numberOfFilesToWrite, string imageInBase64,
             double windDirection, int width, int height, int tileSize)
         {
             PNGHandler.tileSize = tileSize;
@@ -36,7 +36,7 @@ namespace Utilities
 
             List<string> result = model.SimulateFireSpread(numberOfFilesToWrite, tileSize, bitmap);
 
-            return (result, model.finishedSimulation);
+            return result;
         }
 
         public static Tile[,] Read(SKBitmap bitmap)
@@ -44,46 +44,46 @@ namespace Utilities
             //Console.WriteLine($"Image loaded: {width}x{height}");
             Tile[,] tiles = new Tile[PNGHandler.width, PNGHandler.height];
 
-			for (int i = 0; i < tiles.GetLength(0); i++)
-			{
-				for (int j = 0; j < tiles.GetLength(1); j++)
-				{
-					var color = bitmap.GetPixel(i * tileSize, j * tileSize);
-					if (color == 0xffff0000) // Fire color
-					{
-						tiles[i, j] = new Tile(VegetationType.High, DensityType.Dense, BurnStateType.Burning);
-						continue;
-					}
-					if (color == 0xff1a120d) // Burnt color
-					{
-						tiles[i, j] = new Tile(VegetationType.High, DensityType.Dense, BurnStateType.Burnt);
-						continue;
-					}
-					if (!Tile.fromColor.TryGetValue(color, out var tuple)) // Unknown color
-					{
-						if (j == 0)
-						{
-							if (i == 0) tiles[i, j] = new Tile(VegetationType.Rock, DensityType.None, BurnStateType.None);
-							else tiles[i, j] = tiles[i - 1, j];
-							continue;
-						}
-						if (i == 0)
-						{
-							tiles[i, j] = tiles[i, j - 1];
-							continue;
-						}
-						tiles[i, j] = new Random().Next(1) == 1 ? tiles[i, j - 1] : tiles[i - 1, j];
-						continue;
-					}
-					if (tuple.Item2 == DensityType.None) // Water or rock
-					{
-						tiles[i, j] = new Tile(tuple.Item1, tuple.Item2, BurnStateType.None);
-					}
-					// Vegetation
-					tiles[i, j] = new Tile(tuple.Item1, tuple.Item2, BurnStateType.Fuel);
-				}
-			}
-			return tiles;
+            for (int i = 0; i < tiles.GetLength(0); i++)
+            {
+                for (int j = 0; j < tiles.GetLength(1); j++)
+                {
+                    var color = bitmap.GetPixel(i * tileSize, j * tileSize);
+                    if (color == 0xffff0000) // Fire color
+                    {
+                        tiles[i, j] = new Tile(VegetationType.High, DensityType.Dense, BurnStateType.Burning);
+                        continue;
+                    }
+                    if (color == 0xff1a120d) // Burnt color
+                    {
+                        tiles[i, j] = new Tile(VegetationType.High, DensityType.Dense, BurnStateType.Burnt);
+                        continue;
+                    }
+                    if (!Tile.fromColor.TryGetValue(color, out var tuple)) // Unknown color
+                    {
+                        if (j == 0)
+                        {
+                            if (i == 0) tiles[i, j] = new Tile(VegetationType.Rock, DensityType.None, BurnStateType.None);
+                            else tiles[i, j] = tiles[i - 1, j];
+                            continue;
+                        }
+                        if (i == 0)
+                        {
+                            tiles[i, j] = tiles[i, j - 1];
+                            continue;
+                        }
+                        tiles[i, j] = new Random().Next(1) == 1 ? tiles[i, j - 1] : tiles[i - 1, j];
+                        continue;
+                    }
+                    if (tuple.Item2 == DensityType.None) // Water or rock
+                    {
+                        tiles[i, j] = new Tile(tuple.Item1, tuple.Item2, BurnStateType.None);
+                    }
+                    // Vegetation
+                    tiles[i, j] = new Tile(tuple.Item1, tuple.Item2, BurnStateType.Fuel);
+                }
+            }
+            return tiles;
         }
 
         /*public static string Write(Tile[,] tiles, int index)
