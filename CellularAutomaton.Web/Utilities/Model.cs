@@ -59,9 +59,6 @@ namespace Utilities
             return BitMapBase64Converter.ConvertSKBitmapToBase64(bitmap);
         }
 
-
-        public static Queue<CurrentState> bfsQueue = new Queue<CurrentState>();
-
         // Simulate fire spread for a fixed ammount of time steps
         public List<string> SimulateFireSpread(int NumberOfFiles, int tileSize, SKBitmap currentBitmap)
         {
@@ -78,6 +75,8 @@ namespace Utilities
             Random r = new Random();
 
             int currentFile = 0;
+
+            Queue<CurrentState> bfsQueue = new Queue<CurrentState>();
 
             for (int x = 0; x < Rows; x++)
             {
