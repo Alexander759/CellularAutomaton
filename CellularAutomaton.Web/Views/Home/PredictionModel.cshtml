@@ -190,7 +190,7 @@
 		img.src = "data:image/png;base64," + base64String;
 	}
 
-	const frames = [];
+	let frames = [];
 	let currentFrameIndex = 0;
 	let isFetching = false;
 	let animationId = null;
@@ -201,7 +201,7 @@
 			clearTimeout(animationId);
 			animationId = null;
 		}
-		frames.splice(currentFrameIndex);
+		frames = frames.slice(0, currentFrameIndex);
 	}
 
 	async function StartAnimation() {

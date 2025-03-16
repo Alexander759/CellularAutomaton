@@ -1,7 +1,24 @@
 ﻿@{
     ViewData["Title"] = "Повече информация";
 }
-<section class="container d-flex w-100 h-100 mt-3 flex-sm-row flex-column flex-md-row-reverse">
+
+
+<section class="container d-flex w-100 h-100 mt-3 flex-sm-row flex-column mt-5">
+    <div class="col-md-6 col-sm-12 d-flex flex-column h-100 align-content-center justify-content-center">
+        <h2 class="text-center">
+            Какво представляват клетъчните автомати?
+        </h2>
+        <hr />
+        <p>
+            Клетъчните автомати са математически модели, състоящи се от решетка от клетки, всяка от които може да приема определено състояние. Те се развиват във времето според предварително зададени правила, които зависят от състоянието на клетката и нейните съседи. Един от най-известните примери е „Играта на живота“ на Джон Конуей, която демонстрира как прости правила могат да доведат до сложни и неочаквани поведения. Клетъчните автомати намират приложение в различни области, като моделиране на физически процеси, изкуствен интелект и криптография, и служат като инструмент за изследване на самовъзникващите структури и сложността в системите.
+        </p>
+    </div>
+    <div class="col-md-6 col-sm-12 d-flex justify-content-center align-items-center">
+        <img class="p-4" src="../images/Gospers_glider_gun.gif" alt="cellular automate" style="width:70%;" />
+    </div>
+</section>
+
+<section class="container d-flex w-100 h-100 mt-3 flex-sm-row flex-column flex-md-row-reverse  mt-5">
     <div class="col-md-6 col-sm-12 d-flex flex-column h-100 align-content-center justify-content-center">
         <h2 class="text-center">
             История на клетъчните автомати
@@ -11,8 +28,8 @@
             Историята на клетъчните автомати започва през 40-те години на XX век,
             когато унгарският математик Джон фон Нойман, заедно със Станислав Улам,
             изучава механизми за самовъзпроизвеждащи се системи. Те разработват първите
-            модели на КА, които могат да симулират сложни биологични и физически процеси.
-            През 70-те години КА стават популярни благодарение на „Играта на живота“ на Джон
+            модели на клетъчни автомати, които могат да симулират сложни биологични и физически процеси.
+            През 70-те години клетъчните автомати стават популярни благодарение на „Играта на живота“ на Джон
             Конуей – двуизмерен клетъчен автомат, който демонстрира как прости правила могат
             да доведат до сложни, непредсказуеми поведения. По-късно, през 80-те години,
             Стивън Волфрам провежда обширни изследвания върху едномерните клетъчни автомати
@@ -20,11 +37,11 @@
         </p>
     </div>
     <div class="d-flex justify-content-center align-items-start">
-        <img style="width:50%; border-radius: 25%;" src="./images/JohnvonNeumann.jpg" alt="John von Neumann" />
+        <img style="width:50%; border-radius: 25%;" src="../images/JohnvonNeumann.jpg" alt="John von Neumann" />
     </div>
 </section>
 
-<section class="container d-flex w-100 h-100 mt-3 flex-sm-row flex-column">
+<section class="container d-flex w-100 h-100 mt-3 flex-sm-row flex-column  mt-5">
     <div class="col-md-6 col-sm-12 d-flex flex-column h-100 align-content-center justify-content-center">
         <h2 class="text-center">
             Приложения
@@ -37,10 +54,11 @@
             на болести и взаимодействията в екосистемите. В криптографията се прилагат за генериране
             на псевдослучайни числа и сигурни алгоритми. В компютърните науки те са свързани с теорията
             на изчислимостта и могат да действат като универсални изчислителни системи. Освен това,
-            намират място в компютърната графика, градоустройството и дигиталното изкуство.
+            намират силно приложение в биологията, химията и физиката (например симулиране на флуиди).
         </p>
     </div>
-    <div class="col-md-6 col-sm-12 appear-left">
+    <div class="col-md-6 col-sm-12 d-flex justify-content-center align-items-center">
+        <img class="p-4" src="../images/Gas_velocity.gif" alt="Gas velocity" style="width:70%; border-radius: 10%;" />
     </div>
 </section>
 
