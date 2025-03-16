@@ -16,7 +16,7 @@ namespace Utilities
         public static int width, height, tileSize;
         //public static IWebHostEnvironment? Environment { get; set; }
 
-        public static List<string> WriteFiles(int numberOfFilesToWrite, string imageInBase64,
+        public static (List<string>, bool) WriteFiles(int numberOfFilesToWrite, string imageInBase64,
             double windDirection, int width, int height, int tileSize)
         {
             PNGHandler.tileSize = tileSize;
@@ -36,7 +36,7 @@ namespace Utilities
 
             List<string> result = model.SimulateFireSpread(numberOfFilesToWrite, tileSize, bitmap);
 
-            return result;
+            return (result, model.finishedSimulation);
         }
 
         public static Tile[,] Read(SKBitmap bitmap)

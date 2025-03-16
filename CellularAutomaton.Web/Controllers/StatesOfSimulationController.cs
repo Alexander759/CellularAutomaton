@@ -48,7 +48,7 @@ namespace CellularAutomaton.Web.Controllers
 
                 var im = PNGHandler.WriteFiles(n, base64Data, model.WindDirection, model.Width, model.Height, model.TileSize);
 
-                return new JsonResult(new { message = "Success", images = im });
+                return new JsonResult(new { message = "Success", images = im.Item1, isFinished = im.Item2});
             }
             catch (Exception ex)
             {
