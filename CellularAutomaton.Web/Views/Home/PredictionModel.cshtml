@@ -1,4 +1,4 @@
-﻿@{
+﻿﻿@{
 	ViewData["Title"] = "Модел за предсказване на пожари";
 	string url = Context.Request.Host.ToUriComponent();
 }
@@ -8,10 +8,8 @@
 		<canvas id="canvas" width="800" height="400" style="border: 1px solid black"></canvas>
 	</div>
 	<div id="controlContainer" style="display: flex; align-content: center; gap: 3rem;">
-		<button class="btn btn-secondary" id="btnPrev">Предишен</button>
 		<button class="btn btn-danger" id="btnStartStop" onclick="startStopSimulation()">Старт</button>
 		<button class="btn btn-secondary" id="btnRestart" onclick="restartSimulation()">Рестарт</button>
-		<button class="btn btn-secondary" id="btnNext">Следващ</button>
 		<button class="btn btn-secondary" id="btnUpload">Избери файл</button>
 		<input type="file" id="btnUploadInput" accept="image/png" hidden />
 	</div>
@@ -67,7 +65,7 @@
 	const DEFAULT_COLOR = 7;
 	let lastColor = DEFAULT_COLOR;
 
-	function resetCanvas(){
+	function resetCanvas() {
 		document.getElementById(lastColor).classList.remove("btn-success");
 		ctx.fillStyle = colorCodes[DEFAULT_COLOR].color;
 		document.getElementById(DEFAULT_COLOR).classList.add("btn-success");
@@ -86,61 +84,61 @@
 	ctx.imageSmoothingEnabled = false;
 
 	const colorCodes = [
-	  { tileType: "lowGrass",   color: "#fdff99" },
-	  { tileType: "midGrass",   color: "#fbff4a" },
-	  { tileType: "highGrass",  color: "#747527" },
-	  { tileType: "lowBush",    color: "#d1a3ff" },
-	  { tileType: "midBush",    color: "#9d3bff" },
-	  { tileType: "highBush",   color: "#4c2275" },
-	  { tileType: "lowTree",    color: "#90c96f" },
-	  { tileType: "midTree",    color: "#568c37" },
-	  { tileType: "highTree",   color: "#3f6927" },
-	  { tileType: "water",      color: "#0091ff" },
-	  { tileType: "rock",       color: "#4d4d4d" },
-	  { tileType: "fire",       color: "#ff0000" },
-	  { tileType: "burnt",      color: "#1a120d" }
+		{ tileType: "lowGrass", color: "#fdff99" },
+		{ tileType: "midGrass", color: "#fbff4a" },
+		{ tileType: "highGrass", color: "#747527" },
+		{ tileType: "lowBush", color: "#d1a3ff" },
+		{ tileType: "midBush", color: "#9d3bff" },
+		{ tileType: "highBush", color: "#4c2275" },
+		{ tileType: "lowTree", color: "#90c96f" },
+		{ tileType: "midTree", color: "#568c37" },
+		{ tileType: "highTree", color: "#3f6927" },
+		{ tileType: "water", color: "#0091ff" },
+		{ tileType: "rock", color: "#4d4d4d" },
+		{ tileType: "fire", color: "#ff0000" },
+		{ tileType: "burnt", color: "#1a120d" }
 	];
 
 	let isDrawing = false;
 	resetCanvas();
 	canvas.addEventListener("click", function (e) {
-		if(isRunning) return;
+		if (isRunning) return;
 		isEdited = true;
-		ctx.fillRect(e.offsetX - brushSize/2, e.offsetY - brushSize/2, brushSize, brushSize);
+		ctx.fillRect(e.offsetX - brushSize / 2, e.offsetY - brushSize / 2, brushSize, brushSize);
 	})
 
 	canvas.addEventListener("mousedown", function () {
-		if(isRunning) return;
+		if (isRunning) return;
 		isEdited = true;
 		isDrawing = true;
 	});
 
-	canvas.addEventListener("mousemove", function(e) {
-		if(isRunning) return;
-		if(isDrawing){
-			ctx.fillRect(e.offsetX - brushSize/2, e.offsetY - brushSize/2, brushSize, brushSize);
+	canvas.addEventListener("mousemove", function (e) {
+		if (isRunning) return;
+		if (isDrawing) {
+			ctx.fillRect(e.offsetX - brushSize / 2, e.offsetY - brushSize / 2, brushSize, brushSize);
 		}
 	});
 
-	canvas.addEventListener("mouseup", function(e) {
-		if(isRunning) return;
+	canvas.addEventListener("mouseup", function (e) {
+		if (isRunning) return;
 		isDrawing = false;
 	});
 
-	canvas.addEventListener("mouseleave", function(e) {
-		if(isRunning) return;
+	canvas.addEventListener("mouseleave", function (e) {
+		if (isRunning) return;
 		isDrawing = false;
 	});
 
-	function changeColor(index){
-		if(index == lastColor) return;
+	function changeColor(index) {
+		if (index == lastColor) return;
 		ctx.fillStyle = colorCodes[index].color;
 		document.getElementById(index).classList.add("btn-success");
 		document.getElementById(lastColor).classList.remove("btn-success");
 		lastColor = index;
 	}
 
-	function changeCanvasDimentions(event){
+	function changeCanvasDimentions(event) {
 		event.preventDefault();
 		canvasWidth = event.target.canWidth.value;
 		canvasHeight = event.target.canHeight.value;
@@ -159,117 +157,117 @@
 
 	document.getElementById("slider2").oninput = function (e) {
 		windDirection = e.target.value;
-		document.getElementById("arrow").style = "transform-origin: 50% 50%; transform: rotate(" + windDirection*(-57.29) + "deg)";
+		document.getElementById("arrow").style = "transform-origin: 50% 50%; transform: rotate(" + windDirection * (-57.29) + "deg)";
 	};
 </script>
 
 <script>
-		function loadBase64Image(base64String) {
-			const img = new Image();
-			img.onload = function () {
-				canvas.width = img.width;
-				canvas.height = img.height;
-				ctx.drawImage(img, 0, 0);
-			};
-			img.src = "data:image/png;base64," + base64String;
+	function loadBase64Image(base64String) {
+		const img = new Image();
+		img.onload = function () {
+			canvas.width = img.width;
+			canvas.height = img.height;
+			ctx.drawImage(img, 0, 0);
+		};
+		img.src = "data:image/png;base64," + base64String;
+	}
+
+	let frames = [];
+	let currentFrameIndex = 0;
+	let isFetching = false;
+	let animationId = null;
+	let isEdited = true;
+	let initialImage;
+
+
+	function StopAnimation() {
+		if (animationId) {
+			clearTimeout(animationId);
+			animationId = null;
 		}
 
-		let frames = [];
-		let currentFrameIndex = 0;
-		let isFetching = false;
-		let animationId = null;
-		let isEdited = true;
-		let initialImage;
+		//const currentFrame = frames[currentFrameIndex];
+		//frames.splice(0,frames.lenght);//[];//frames.slice(0, currentFrameIndex);
+		frames = [];
+		frames.lenght = 0;
+		//while(frames.lenght > 0) frames.pop();
 
+		currentFrameIndex = 0;
+		//console.log(frames.lenght);
+		//console.log(frames);
+	}
 
-		function StopAnimation() {
-			if (animationId) {
-				clearTimeout(animationId);
-				animationId = null;
-			}
-			
-			//const currentFrame = frames[currentFrameIndex];
-			//frames.splice(0,frames.lenght);//[];//frames.slice(0, currentFrameIndex);
-			frames = [];
-			frames.lenght = 0;
-			//while(frames.lenght > 0) frames.pop();
+	async function StartAnimation() {
+		const imageData = canvas.toDataURL("image/png");
+		if (isEdited) initialImage = imageData;
+		isEdited = false;
 
-			currentFrameIndex = 0;
-			//console.log(frames.lenght);
-			console.log(frames);
+		frames = [imageData];
+
+		if (currentFrameIndex !== 0) {
+			currentFrameIndex++;
 		}
-
-		async function StartAnimation() {
-			const imageData = canvas.toDataURL("image/png");
-			if(isEdited) initialImage = imageData;
-			isEdited = false;
-
-			frames = [imageData];
-
-			if(currentFrameIndex!==0){
-				currentFrameIndex++;
-			}
 
 
 
 
 		ShowNextSimulationFrame();
 	}
-		async function fetchNextFrames() {
-				if (isFetching) return;
-				isFetching = true;
+	async function fetchNextFrames() {
+		if (isFetching) return;
+		isFetching = true;
 
-				try {
-					const response = await fetch("https://@url/api/StatesOfSimulation/sendState", {
-						method: "POST",
-						headers: { "Content-Type": "application/json" },
-						body: JSON.stringify({
-							Image: frames[frames.length - 1],
-							WindDirection: windDirection,
-							Width: canvasWidth,
-							Height: canvasHeight,
-							TileSize: 1
-						})
-					});
+		try {
+			const response = await fetch("https://@url/api/StatesOfSimulation/sendState", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					Image: frames[frames.length - 1],
+					WindDirection: windDirection,
+					Width: canvasWidth,
+					Height: canvasHeight,
+					TileSize: 1
+				})
+			});
 
-					if (!response.ok) throw new Error("Failed to upload image");
+			if (!response.ok) throw new Error("Failed to upload image");
 
-					const result = await response.json();
-					if (result.images && result.images.length > 0) {
-						frames.push(...result.images);
-					} else {
-						console.warn("No new frames received.");
-					}
-				} catch (error) {
-					console.error("Error uploading image:", error);
-				} finally {
-					isFetching = false;
-				}
+			const result = await response.json();
+			if (result.images && result.images.length > 0) {
+				frames.push(...result.images);
+			} else {
+				console.warn("No new frames received.");
 			}
+		} catch (error) {
+			console.error("Error uploading image:", error);
+		} finally {
+			isFetching = false;
+		}
+	}
 
-			function ShowNextSimulationFrame() {
-				console.log(currentFrameIndex)
+	function ShowNextSimulationFrame() {
+		//console.log(currentFrameIndex)
 
-				if (currentFrameIndex < frames.length - 1) {
-					currentFrameIndex++;
-					loadBase64Image(frames[currentFrameIndex]);
-				}
+		if (currentFrameIndex < frames.length - 1) {
+			currentFrameIndex++;
+			loadBase64Image(frames[currentFrameIndex]);
+		}
 
-				if (frames.length - currentFrameIndex < 20 && !isFetching) {
-					fetchNextFrames();
-				}
+		if (frames.length - currentFrameIndex < 20 && !isFetching) {
+			fetchNextFrames();
+		}
 
-				animationId = setTimeout(ShowNextSimulationFrame, 500);
-			}
+		animationId = setTimeout(ShowNextSimulationFrame, 500);
+	}
 
 </script>
 
 <script>
 	function restartSimulation() {
 		if (animationId) {
-				clearTimeout(animationId);
-				animationId = null;
-			}
+			clearTimeout(animationId);
+			animationId = null;
+		}
 
 		const img = new Image();
 		img.onload = function () {
@@ -290,7 +288,7 @@
 	let isRunning = false;
 
 	function startStopSimulation() {
-		if(isRunning){
+		if (isRunning) {
 			stopSimulation();
 			return;
 		};
@@ -303,7 +301,7 @@
 	}
 
 
-	function stopSimulation(){
+	function stopSimulation() {
 		isRunning = false;
 
 		StopAnimation();
@@ -313,24 +311,24 @@
 		ctx.fillStyle = colorCodes[lastColor].color;
 	}
 
-	function disableButtons(){
-			document.querySelectorAll("button").forEach(button => {
-			if(button.parentElement.id != "controlContainer") button.disabled = true;
+	function disableButtons() {
+		document.querySelectorAll("button").forEach(button => {
+			if (button.parentElement.id != "controlContainer") button.disabled = true;
 		});
 	}
-	function disableInputs(){
-			document.querySelectorAll("input").forEach(input => {
+	function disableInputs() {
+		document.querySelectorAll("input").forEach(input => {
 			input.disabled = true;
 		});
 	}
 
-	function enableButtons(){
-			document.querySelectorAll("button").forEach(button => {
+	function enableButtons() {
+		document.querySelectorAll("button").forEach(button => {
 			button.disabled = false;
 		});
 	}
-	function enableInputs(){
-			document.querySelectorAll("input").forEach(input => {
+	function enableInputs() {
+		document.querySelectorAll("input").forEach(input => {
 			input.disabled = false;;
 		});
 	}
