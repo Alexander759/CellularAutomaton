@@ -20,6 +20,8 @@ namespace Utilities
             double windDirection, int width, int height, int tileSize)
         {
             PNGHandler.tileSize = tileSize;
+            PNGHandler.width = width / tileSize;
+            PNGHandler.height = height / tileSize;
             /*
 			string newFolder = Guid.NewGuid().ToString();
 			Directory.CreateDirectory(Path.Combine(Environment.WebRootPath, newFolder));
@@ -30,7 +32,7 @@ namespace Utilities
 
             SKBitmap bitmap = BitMapBase64Converter.ConvertBase64ToSKBitmap(imageInBase64);
             Tile[,] tiles = PNGHandler.Read(bitmap);
-            Model model = new Model(width, height, tiles, windDirection);
+            Model model = new Model(PNGHandler.width, PNGHandler.height, tiles, windDirection);
 
             List<string> result = model.SimulateFireSpread(numberOfFilesToWrite, tileSize, bitmap);
 
@@ -39,16 +41,14 @@ namespace Utilities
 
         public static Tile[,] Read(SKBitmap bitmap)
         {
-            width = bitmap.Width;
-            height = bitmap.Height;
             //Console.WriteLine($"Image loaded: {width}x{height}");
-            Tile[,] tiles = new Tile[width / tileSize, height / tileSize];
+            Tile[,] tiles = new Tile[PNGHandler.width, PNGHandler.height];
 
             for (int i = 0; i < tiles.GetLength(0); i++)
             {
                 for (int j = 0; j < tiles.GetLength(1); j++)
                 {
-                    var color = bitmap.GetPixel(i * tileSize, j * tileSize);
+                    var color = bitmap.GetPixel(i * PNGHandler.tileSize, j * PNGHandler.tileSize);
                     if (color == 0xffff0000) // fire color
                     {
                         tiles[i, j] = new Tile(VegetationType.High, DensityType.Dense, BurnStateType.Burning);
