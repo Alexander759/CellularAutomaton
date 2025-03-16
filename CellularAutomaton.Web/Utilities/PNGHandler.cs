@@ -24,7 +24,7 @@ namespace Utilities
 			SKBitmap beginning = BitMapBase64Converter.ConvertBase64ToSKBitmap(imageInBase64);
             Tile[,] tiles = PNGHandler.Read(beginning);
             Model model = new Model(width, height, tiles, windDirection);
-
+			
 			List<string> result = new List<string>();
 
 			for (int i = 0; i < numberOfFilesToWrite; i++)
