@@ -21,8 +21,6 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-PNGHandler.Environment = app.Services.GetService<IWebHostEnvironment>();
-
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

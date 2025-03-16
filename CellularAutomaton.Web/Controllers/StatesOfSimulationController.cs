@@ -46,7 +46,9 @@ namespace CellularAutomaton.Web.Controllers
 
                 int n = 50;
 
-                return new JsonResult(new { message = "Success", images = PNGHandler.WriteFiles(n, base64Data, model.WindDirection, model.Width, model.Height, model.TileSize) });
+                var im = PNGHandler.WriteFiles(n, base64Data, model.WindDirection, model.Width, model.Height, model.TileSize);
+
+                return new JsonResult(new { message = "Success", images = im });
             }
             catch (Exception ex)
             {
