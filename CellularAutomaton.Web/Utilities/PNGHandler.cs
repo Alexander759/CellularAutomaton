@@ -4,44 +4,45 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using CellularAutomaton.Web.Models;
 using CellularAutomaton.Web.Utilities;
+//using CellularAutomaton.Web.Models;
 using SkiaSharp;
 
 namespace Utilities
 {
-	static class PNGHandler
-	{
-        public static int width, height, tileSize = 10;
-		public static bool foundFire = false;
-        public static IWebHostEnvironment? Environment { get; set; }
+    static class PNGHandler
+    {
 
-		public static List<string> WriteFiles(int numberOfFilesToWrite, string imageInBase64,
-			double windDirection, int width, int height, int tileSize)
-		{
-			PNGHandler.tileSize = tileSize;
+        public static int width, height, tileSize;
+        //public static IWebHostEnvironment? Environment { get; set; }
 
-			SKBitmap beginning = BitMapBase64Converter.ConvertBase64ToSKBitmap(imageInBase64);
-            Tile[,] tiles = PNGHandler.Read(beginning);
+        public static List<string> WriteFiles(int numberOfFilesToWrite, string imageInBase64,
+            double windDirection, int width, int height, int tileSize)
+        {
+            PNGHandler.tileSize = tileSize;
+            PNGHandler.width = width / tileSize;
+            PNGHandler.height = height / tileSize;
+            /*
+			string newFolder = Guid.NewGuid().ToString();
+			Directory.CreateDirectory(Path.Combine(Environment.WebRootPath, newFolder));
+            string path = Path.Combine(Environment.WebRootPath, newFolder);
+            Tile[,] tiles = PNGHandler.Read(filepathToPhoto);
             Model model = new Model(width, height, tiles, windDirection);
-			
-			List<string> result = new List<string>();
+			*/
 
-			for (int i = 0; i < numberOfFilesToWrite; i++)
-            {
-                model.SimulateFireSpread();
-                result.Add(PNGHandler.Write(model.Grid, i));
-            }
+            SKBitmap bitmap = BitMapBase64Converter.ConvertBase64ToSKBitmap(imageInBase64);
+            Tile[,] tiles = PNGHandler.Read(bitmap);
+            Model model = new Model(PNGHandler.width, PNGHandler.height, tiles, windDirection);
 
-			beginning.Dispose();
-			return result;
+            List<string> result = model.SimulateFireSpread(numberOfFilesToWrite, tileSize, bitmap);
+
+            return result;
         }
 
-		public static Tile[,] Read(SKBitmap bitmap)
-		{
-			width = bitmap.Width;
-			height = bitmap.Height;
-			Tile[,] tiles = new Tile[width / tileSize, height / tileSize];
+        public static Tile[,] Read(SKBitmap bitmap)
+        {
+            //Console.WriteLine($"Image loaded: {width}x{height}");
+            Tile[,] tiles = new Tile[PNGHandler.width, PNGHandler.height];
 
 			for (int i = 0; i < tiles.GetLength(0); i++)
 			{
@@ -51,7 +52,6 @@ namespace Utilities
 					if (color == 0xffff0000) // Fire color
 					{
 						tiles[i, j] = new Tile(VegetationType.High, DensityType.Dense, BurnStateType.Burning);
-						foundFire = true;
 						continue;
 					}
 					if (color == 0xff1a120d) // Burnt color
@@ -83,11 +83,10 @@ namespace Utilities
 					tiles[i, j] = new Tile(tuple.Item1, tuple.Item2, BurnStateType.Fuel);
 				}
 			}
-			if (!foundFire) ; // End state!
 			return tiles;
-		}
+        }
 
-		public static string Write(Tile[,] tiles, int index)
+        /*public static string Write(Tile[,] tiles, int index)
 		{
 
 			using SKBitmap bitmap = new SKBitmap(width, height);
@@ -126,6 +125,7 @@ namespace Utilities
 			}
 
 			return BitMapBase64Converter.ConvertSKBitmapToBase64(bitmap);
-		}
-	}
+		}*/
+    }
 }
+

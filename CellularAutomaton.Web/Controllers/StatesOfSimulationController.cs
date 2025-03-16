@@ -44,7 +44,11 @@ namespace CellularAutomaton.Web.Controllers
 
                 await System.IO.File.WriteAllBytesAsync(filePath, imageBytes);
 
-                return new JsonResult(new { message = "Success", images = PNGHandler.WriteFiles(NUMBEROFFRAMES, base64Data, model.WindDirection, model.Width, model.Height, model.TileSize) });
+                int n = 50;
+
+                var im = PNGHandler.WriteFiles(n, base64Data, model.WindDirection, model.Width, model.Height, model.TileSize);
+
+                return new JsonResult(new { message = "Success", images = im });
             }
             catch (Exception ex)
             {
