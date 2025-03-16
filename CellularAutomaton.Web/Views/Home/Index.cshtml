@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Начало";
 }
 
 <link rel="stylesheet" href="~/css/MainPage.css" />
@@ -13,64 +13,34 @@
     </div>
 </div>
 
-<section class="container d-flex w-100 h-100 min-vh-100 mt-3 flex-sm-row flex-column mt-5">
+<section class="container d-flex w-100 h-100 mt-3 flex-sm-row flex-column mt-5">
     <div class="col-md-6 col-sm-12 d-flex flex-column h-100 align-content-center justify-content-center">
         <h2 class="text-center">
-            Какво представляват клетъчните автомати?
+            Разрастване на пожарите
         </h2>
         <hr />
         <p>
-            Клетъчните автомати представляват математически модели, които се основават на 
-            решетка от клетки, като всяка отделна клетка може да приема едно от предварително 
-            дефинирано крайно множество състояния. Всяко от тези състояния определя текущото 
-            състояние на клетката в даден момент от времето. Еволюцията на системата, съставена 
-            от тези клетки, протича в съответствие с определени правила, които предварително 
-            са зададени и които определят начина, по който клетките ще променят своето състояние 
-            във времето.
-            Обикновено тези правила зависят не само от самата клетка, но и от състоянията на 
-            клетките, които я заобикалят в решетката. Така всяка клетка не функционира изолирано, 
-            а взаимодейства със своите съседи, като взема под внимание тяхното състояние, за да 
-            определи как ще се промени в следващата времева стъпка. Целият процес на развитие на 
-            клетъчния автомат протича в отделни, дискретни времеви стъпки, при които всички клетки 
-            в решетката едновременно актуализират своето състояние според определените правила.
-            Въпреки че правилата, които управляват поведението на клетъчните автомати, 
-            обикновено са сравнително прости и лесни за описание, те могат да доведат до 
-            изключително сложни и понякога дори неочаквани форми на поведение. Тези модели 
-            са способни да генерират структури, които наподобяват самоорганизиращи се системи, 
-            а в някои случаи могат дори да демонстрират свойства, характерни за изчислителните 
-            процеси. Тази способност на клетъчните автомати да възпроизвеждат сложни явления с 
-            помощта на относително прости правила ги прави обект на интерес в различни научни 
-            области, включително математиката, информатиката, физиката и биологията.
+
         </p>
     </div class="w-100 h-100">
 </section>
 
-<section class="container d-flex w-100 h-100 min-vh-100 mt-3 flex-sm-row flex-column flex-md-row-reverse">
+<section class="container d-flex w-100 h-100 mt-3 flex-sm-row flex-column flex-md-row-reverse">
     <div class="col-md-6 col-sm-12 d-flex flex-column h-100 align-content-center justify-content-center">
         <h2 class="text-center">
-            История на клетъчните автомати
+            Ефекти на глобалното затопляне
         </h2>
         <hr />
         <p>
-            Историята на клетъчните автомати започва през 40-те години на XX век, 
-            когато унгарският математик Джон фон Нойман, заедно със Станислав Улам, 
-            изучава механизми за самовъзпроизвеждащи се системи. Те разработват първите 
-            модели на КА, които могат да симулират сложни биологични и физически процеси.
-            През 70-те години КА стават популярни благодарение на „Играта на живота“ на Джон 
-            Конуей – двуизмерен клетъчен автомат, който демонстрира как прости правила могат 
-            да доведат до сложни, непредсказуеми поведения. По-късно, през 80-те години, 
-            Стивън Волфрам провежда обширни изследвания върху едномерните клетъчни автомати 
-            и доказва тяхната връзка с теорията на изчислимостта и хаоса.
-            Днес клетъчните автомати намират приложение в различни области като 
-            криптография, моделиране на физични системи, биология и дори изкуствен 
-            интелект. Тяхната простота и способност да симулират сложни явления ги 
-            правят важен инструмент в съвременната наука. 
+           
         </p>
-    </div class="w-100 h-100">
-    <div class=""></div>
+    </div>
+    <div class="d-flex justify-content-center align-items-start"  >
+        <img style="width:50%; border-radius: 25%;" src="./images/JohnvonNeumann.jpg" alt="John von Neumann" />
+    </div>
 </section>
 
-<section class="container d-flex w-100 h-100 min-vh-100 mt-3 flex-sm-row flex-column">
+<section class="container d-flex w-100 h-100 mt-3 flex-sm-row flex-column">
     <div class="col-md-6 col-sm-12 d-flex flex-column h-100 align-content-center justify-content-center">
         <h2 class="text-center">
             Приложения
@@ -105,90 +75,88 @@
         return { canvas, ctx };
     }
 
-    {
-        const config = {
-            cols: 300,
-            rows: 300,
-            numAnts: 2000,
-            evaporationRate: 0.99,
-            antColor: 'rgb(255, 0, 0)',
-            backgroundColor: 'rgb(0, 100, 0)'
-        };
+    const config = {
+        cols: 300,
+        rows: 300,
+        numEntities: 2000,
+        evaporationRate: 0.99,
+        entityColor: 'rgb(255, 0, 0)',
+        backgroundColor: 'rgb(0, 100, 0)'
+    };
 
-        const { canvas, ctx } = createCanvas('background-canvas-simulation-holder');
+    const { canvas, ctx } = createCanvas('background-canvas-simulation-holder');
 
-        let cellSizeX = canvas.width / config.cols;
-        let cellSizeY = canvas.width / config.cols;
+    let cellSizeX = canvas.width / config.cols;
+    let cellSizeY = canvas.width / config.cols;
 
-        if ((window.screen.width / window.screen.height) < 1) {
-            cellSizeX =  canvas.height / config.rows
-            cellSizeY = canvas.height / config.rows
-        }
-
-        let grid = Array.from({ length: config.rows }, () => Array(config.cols).fill(0));
-        let ants = [];
-
-        const directions = [
-            { x: 0, y: -1 },
-            { x: 1, y: 0 },
-            { x: 0, y: 1 },
-            { x: -1, y: 0 }
-        ];
-
-        class Ant {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
-                this.direction = Math.floor(Math.random() * directions.length);
-            }
-
-            move() {
-                this.direction = (this.direction + (Math.random() > 0.5 ? 1 : -1) + directions.length) % directions.length;
-                let newX = this.x + directions[this.direction].x;
-                let newY = this.y + directions[this.direction].y;
-
-                if (newX >= 0 && newX < config.cols && newY >= 0 && newY < config.rows) {
-                    this.x = newX;
-                    this.y = newY;
-                    grid[this.y][this.x] = 1;
-                }
-            }
-        }
-
-        function initializeAnts() {
-            ants = Array.from({ length: config.numAnts }, () =>
-                new Ant(
-                    Math.floor(Math.random() * config.cols),
-                    Math.floor(Math.random() * config.rows)
-                )
-            );
-        }
-
-        function drawGrid() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            grid.forEach((row, y) => {
-                row.forEach((cell, x) => {
-                    let intensity = Math.min(255, Math.max(0, cell * 255));
-                    ctx.fillStyle = intensity > 100 ? config.antColor : config.backgroundColor;
-                    ctx.fillRect(x * cellSizeX, y * cellSizeY, cellSizeX, cellSizeY);
-                });
-            });
-        }
-
-        function updateGrid() {
-            ants.forEach(ant => ant.move());
-            grid = grid.map(row => row.map(cell => cell * config.evaporationRate));
-        }
-
-        function loop() {
-            drawGrid();
-            updateGrid();
-            requestAnimationFrame(loop);
-        }
-
-        initializeAnts();
-        loop();
+    if ((window.screen.width / window.screen.height) < 1) {
+        cellSizeX =  canvas.height / config.rows;
+        cellSizeY = canvas.height / config.rows;
     }
+
+    let grid = Array.from({ length: config.rows }, () => Array(config.cols).fill(0));
+    let entities = [];
+
+    const directions = [
+        { x: 0, y: -1 },
+        { x: 1, y: 0 },
+        { x: 0, y: 1 },
+        { x: -1, y: 0 }
+    ];
+
+    class Entity {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+            this.direction = Math.floor(Math.random() * directions.length);
+        }
+
+        move() {
+            this.direction = (this.direction + (Math.random() > 0.5 ? 1 : -1) + directions.length) % directions.length;
+            let newX = this.x + directions[this.direction].x;
+            let newY = this.y + directions[this.direction].y;
+
+            if (newX >= 0 && newX < config.cols && newY >= 0 && newY < config.rows) {
+                this.x = newX;
+                this.y = newY;
+                grid[this.y][this.x] = 1;
+            }
+        }
+    }
+
+    function initializeEntities() {
+        entities = Array.from({ length: config.numEntities }, () =>
+            new Entity(
+                Math.floor(Math.random() * config.cols),
+                Math.floor(Math.random() * config.rows)
+            )
+        );
+    }
+
+    function drawGrid() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        grid.forEach((row, y) => {
+            row.forEach((cell, x) => {
+                let intensity = Math.min(255, Math.max(0, cell * 255));
+                ctx.fillStyle = intensity > 100 ? config.entityColor : config.backgroundColor;
+                ctx.fillRect(x * cellSizeX, y * cellSizeY, cellSizeX, cellSizeY);
+            });
+        });
+    }
+
+    function updateGrid() {
+        entities.forEach(entity => entity.move());
+        grid = grid.map(row => row.map(cell => cell * config.evaporationRate));
+    }
+
+    function loop() {
+        drawGrid();
+        updateGrid();
+        requestAnimationFrame(loop);
+    }
+
+    initializeEntities();
+    loop();
 </script>
 
 <script>

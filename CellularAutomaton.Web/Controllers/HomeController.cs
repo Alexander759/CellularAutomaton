@@ -18,8 +18,7 @@ namespace CellularAutomaton.Web.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
-        {
+        public IActionResult MoreInformation() { 
             return View();
         }
 
