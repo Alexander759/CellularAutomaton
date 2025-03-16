@@ -62,6 +62,8 @@ namespace Utilities
         // Simulate fire spread for a fixed ammount of time steps
         public List<string> SimulateFireSpread(int NumberOfFiles, int tileSize, SKBitmap currentBitmap)
         {
+            finishedSimulation = false;
+
             using SKCanvas canvas = new SKCanvas(currentBitmap);
             SKPaint paint;
 
@@ -140,7 +142,8 @@ namespace Utilities
                     int nextY = state.cellY + moveDirections[dir, 1];
 
                     if (nextX < 0 || nextX >= Rows || nextY < 0 || nextY >= Cols || Grid[nextX, nextY].BurnState == BurnStateType.Burning
-                        || Grid[nextX, nextY].BurnState == BurnStateType.Burnt || Grid[nextX, nextY].BurnState == BurnStateType.None) continue;
+                        || Grid[nextX, nextY].BurnState == BurnStateType.Burnt || Grid[nextX, nextY].BurnState == BurnStateType.None
+                        || Grid[nextX, nextY].Density == (double)DensityType.None / 10.0) continue;
 
                     double probability = CalculateSpreadProbability(state.cellX, state.cellY, angle);
                     if (dir % 2 == 1) probability /= Math.Sqrt(2);
