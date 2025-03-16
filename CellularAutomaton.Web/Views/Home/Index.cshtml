@@ -6,14 +6,14 @@
 
 <div class="text-center w-100" style="height: calc(100vh - 3em); background: black;">
     <h1 class="text-center position-absolute text-white" style="font-family: Arial, Helvetica, sans-serif; font-size: 5em; z-index: 100; top: 15%; left: 50%; transform: translate(-50%, -50%)">
-        Приложения на клетъчните автомати
+        Пожари
     </h1>
     
     <div class="w-100 h-100 p-0 m-0" style=" filter: brightness(80%); " id="background-canvas-simulation-holder">
     </div>
 </div>
 
-<section class="container d-flex w-100 h-100 mt-3 flex-sm-row flex-column mt-5">
+<section class="container d-flex w-100 h-100 vh-100 mt-3 flex-sm-row flex-column mt-5">
     <div class="col-md-6 col-sm-12 d-flex flex-column h-100 align-content-center justify-content-center">
         <h2 class="text-center">
             Разрастване на пожарите
@@ -22,6 +22,10 @@
         <p>
 
         </p>
+    </div>
+    
+    <div class="col-md-6 col-sm-12 d-flex flex-column h-100 align-content-center justify-content-center">
+        <img class="w-100" src="./images/WildFire.jpg" alt="wildfire" style="border-radius: 10%;" />
     </div class="w-100 h-100">
 </section>
 
@@ -40,30 +44,7 @@
     </div>
 </section>
 
-<section class="container d-flex w-100 h-100 mt-3 flex-sm-row flex-column">
-    <div class="col-md-6 col-sm-12 d-flex flex-column h-100 align-content-center justify-content-center">
-        <h2 class="text-center">
-            Приложения
-        </h2>
-        <hr />
-        <p>
-            Клетъчните автомати намират приложение в различни научни и технологични области. 
-            Във физиката се използват за симулиране на флуиди, фазови преходи и термодинамични 
-            процеси. В биологията помагат за моделиране на растежа на тумори, разпространението 
-            на болести и взаимодействията в екосистемите. В криптографията се прилагат за генериране 
-            на псевдослучайни числа и сигурни алгоритми. В компютърните науки те са свързани с теорията 
-            на изчислимостта и могат да действат като универсални изчислителни системи. Освен това, 
-            намират място в компютърната графика, градоустройството и дигиталното изкуство.
-        </p>
-    </div>
-    <div class="col-md-6 col-sm-12 appear-left">
-       
-    </div>
-</section>
 
-<section>
-    <div class="col-md-6  col-sm-12" id="canvas-simulation-h-holder"></div>
-</section>
 <script>
     function createCanvas(containerId) {
         const container = document.getElementById(containerId);
