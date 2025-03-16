@@ -2,29 +2,6 @@
 	ViewData["Title"] = "Модел за предсказване на пожари";
 	string url = Context.Request.Host.ToUriComponent();
 }
-<style>
-	.btnContainer {
-		display: flex;
-		flex-direction: row;
-		gap: 2rem;
-		align-items: center;
-		justify-content: space-between;
-	}
-
-	.btnContainer button {
-		flex-grow: 1;
-		width: 15rem;
-	}
-
-	.btnContainer span {
-		flex-grow: 1;
-		width: 15rem;
-	}
-
-	#controlContainer button {
-		width: 7rem;
-	}
-</style>
 <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 2rem; padding-top: 3rem;">
 	<h1 class="text-primary">Модел за предсказване на пожари</h1>
 	<div>
@@ -33,9 +10,9 @@
 	<div id="controlContainer" style="display: flex; align-content: center; gap: 3rem;">
 		<button class="btn btn-secondary" id="btnPrev">Предишен</button>
 		<button class="btn btn-danger" id="btnStartStop" onclick="startStopSimulation()">Старт</button>
-		<button class="btn btn-secondary" id="btnRestart">Рестарт</button>
+		<button class="btn btn-secondary" id="btnRestart" onclick="restartSimulation()">Рестарт</button>
 		<button class="btn btn-secondary" id="btnNext">Следващ</button>
-		<button class="btn btn-secondary" id="btnUpload">Качи</button>
+		<button class="btn btn-secondary" id="btnUpload">Избери файл</button>
 		<input type="file" id="btnUploadInput" accept="image/png" hidden />
 	</div>
 	<div style="display: grid; flex-direction: column; gap: 1rem; justify-content: space-around;">
@@ -79,7 +56,7 @@
 			<input class="form-control" name="canWidth" style="width: 8rem;" type="text" value="800" id="canWidth" />
 			<label class="text-secondary">Въведете височина: </label>
 			<input class="form-control" name="canHeight" style="width: 8rem;" type="text" value="400" id="canHeight" />
-			<button class="btn btn-success">Запази</button>
+			<button class="btn btn-success">Оразмери</button>
 		</form>
 	</div>
 
@@ -127,24 +104,31 @@
 	let isDrawing = false;
 	resetCanvas();
 	canvas.addEventListener("click", function (e) {
+		if(isRunning) return;
+		isEdited = true;
 		ctx.fillRect(e.offsetX - brushSize/2, e.offsetY - brushSize/2, brushSize, brushSize);
 	})
 
 	canvas.addEventListener("mousedown", function () {
+		if(isRunning) return;
+		isEdited = true;
 		isDrawing = true;
 	});
 
 	canvas.addEventListener("mousemove", function(e) {
+		if(isRunning) return;
 		if(isDrawing){
 			ctx.fillRect(e.offsetX - brushSize/2, e.offsetY - brushSize/2, brushSize, brushSize);
 		}
 	});
 
 	canvas.addEventListener("mouseup", function(e) {
+		if(isRunning) return;
 		isDrawing = false;
 	});
 
 	canvas.addEventListener("mouseleave", function(e) {
+		if(isRunning) return;
 		isDrawing = false;
 	});
 
@@ -180,87 +164,125 @@
 </script>
 
 <script>
-	function loadBase64Image(base64String) {
+		function loadBase64Image(base64String) {
+			const img = new Image();
+			img.onload = function () {
+				canvas.width = img.width;
+				canvas.height = img.height;
+				ctx.drawImage(img, 0, 0);
+			};
+			img.src = "data:image/png;base64," + base64String;
+		}
+
+		let frames = [];
+		let currentFrameIndex = 0;
+		let isFetching = false;
+		let animationId = null;
+		let isEdited = true;
+		let initialImage;
+
+
+		function StopAnimation() {
+			if (animationId) {
+				clearTimeout(animationId);
+				animationId = null;
+			}
+			
+			//const currentFrame = frames[currentFrameIndex];
+			//frames.splice(0,frames.lenght);//[];//frames.slice(0, currentFrameIndex);
+			frames = [];
+			frames.lenght = 0;
+			//while(frames.lenght > 0) frames.pop();
+
+			currentFrameIndex = 0;
+			//console.log(frames.lenght);
+			console.log(frames);
+		}
+
+		async function StartAnimation() {
+			const imageData = canvas.toDataURL("image/png");
+			if(isEdited) initialImage = imageData;
+			isEdited = false;
+
+			frames = [imageData];
+
+			if(currentFrameIndex!==0){
+				currentFrameIndex++;
+			}
+
+
+
+
+		ShowNextSimulationFrame();
+	}
+		async function fetchNextFrames() {
+				if (isFetching) return;
+				isFetching = true;
+
+				try {
+					const response = await fetch("https://@url/api/StatesOfSimulation/sendState", {
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify({
+							Image: frames[frames.length - 1],
+							WindDirection: windDirection,
+							Width: canvasWidth,
+							Height: canvasHeight,
+							TileSize: 1
+						})
+					});
+
+					if (!response.ok) throw new Error("Failed to upload image");
+
+					const result = await response.json();
+					if (result.images && result.images.length > 0) {
+						frames.push(...result.images);
+					} else {
+						console.warn("No new frames received.");
+					}
+				} catch (error) {
+					console.error("Error uploading image:", error);
+				} finally {
+					isFetching = false;
+				}
+			}
+
+			function ShowNextSimulationFrame() {
+				console.log(currentFrameIndex)
+
+				if (currentFrameIndex < frames.length - 1) {
+					currentFrameIndex++;
+					loadBase64Image(frames[currentFrameIndex]);
+				}
+
+				if (frames.length - currentFrameIndex < 20 && !isFetching) {
+					fetchNextFrames();
+				}
+
+				animationId = setTimeout(ShowNextSimulationFrame, 500);
+			}
+
+</script>
+
+<script>
+	function restartSimulation() {
+		if (animationId) {
+				clearTimeout(animationId);
+				animationId = null;
+			}
+
 		const img = new Image();
 		img.onload = function () {
-			canvas.width = img.width;
-			canvas.height = img.height;
 			ctx.drawImage(img, 0, 0);
 		};
-		img.src = "data:image/png;base64," + base64String;
+		img.src = initialImage;
+
+		frames = [initialImage];
+		//console.log(frames);
+		currentFrameIndex = 0;
+
+		stopSimulation();
 	}
-
-	const frames = [];
-	let currentFrameIndex = 0;
-	let isFetching = false;
-	let animationId = null;
-	
-	
-	function StopAnimation() {
-		if (animationId) {
-			clearTimeout(animationId);
-			animationId = null;
-		}
-		frames.splice(currentFrameIndex);
-	}
-
-	async function StartAnimation() {
-		const imageData = canvas.toDataURL("image/png");
-		frames.push(imageData);
-
-		if(currentFrameIndex!==0){
-			currentFrameIndex++;
-		}
-
-		
-    async function fetchNextFrames() {
-        if (isFetching) return;
-        isFetching = true;
-
-        try {
-            const response = await fetch("https://@url/api/StatesOfSimulation/sendState", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    Image: frames[frames.length - 1],
-                    WindDirection: windDirection,
-                    Width: canvasWidth,
-                    Height: canvasHeight,
-                    TileSize: 2
-                })
-            });
-
-            if (!response.ok) throw new Error("Failed to upload image");
-
-            const result = await response.json();
-            if (result.images && result.images.length > 0) {
-                frames.push(...result.images);
-            } else {
-                console.warn("No new frames received.");
-            }
-        } catch (error) {
-            console.error("Error uploading image:", error);
-        } finally {
-            isFetching = false;
-        }
-    }
-
-    function ShowNextSimulationFrame() {
-        if (currentFrameIndex < frames.length - 1) {
-            currentFrameIndex++;
-            loadBase64Image(frames[currentFrameIndex]);
-        }
-
-        if (frames.length - currentFrameIndex < 20 && !isFetching) {
-            fetchNextFrames();
-        }
-
-        animationId = setTimeout(ShowNextSimulationFrame, 500);
-    }
-
-    ShowNextSimulationFrame();
-}
-	
 </script>
 
 
@@ -269,13 +291,7 @@
 
 	function startStopSimulation() {
 		if(isRunning){
-			isRunning = false;
-
-			StopAnimation();
-			enableButtons();
-			enableInputs();
-			document.getElementById("btnStartStop").textContent = "Старт";
-			ctx.fillStyle = colorCodes[lastColor].color;
+			stopSimulation();
 			return;
 		};
 		isRunning = true;
@@ -284,6 +300,17 @@
 		disableInputs();
 		document.getElementById("btnStartStop").textContent = "Стоп";
 		StartAnimation();
+	}
+
+
+	function stopSimulation(){
+		isRunning = false;
+
+		StopAnimation();
+		enableButtons();
+		enableInputs();
+		document.getElementById("btnStartStop").textContent = "Старт";
+		ctx.fillStyle = colorCodes[lastColor].color;
 	}
 
 	function disableButtons(){
@@ -334,3 +361,27 @@
 		}
 	})
 </script>
+
+<style>
+	.btnContainer {
+		display: flex;
+		flex-direction: row;
+		gap: 2rem;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+		.btnContainer button {
+			flex-grow: 1;
+			width: 15rem;
+		}
+
+		.btnContainer span {
+			flex-grow: 1;
+			width: 15rem;
+		}
+
+	#controlContainer button {
+		width: 7rem;
+	}
+</style>
