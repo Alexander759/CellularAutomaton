@@ -1,1 +1,2 @@
-# Web-базиран модел за симулация на пожари чрез имплементация на клетъчни автомати
+# Web-based fire simulation model using cellular automata
+First place FMI{CODES} 2025 project https://fmicodes.com/en/ranking
